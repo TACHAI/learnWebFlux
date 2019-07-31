@@ -42,7 +42,21 @@ public class SomeController {
 
 
 
+    @RequestMapping("/time")
+    public Flux<String> timeHandle(@RequestParam List<String> cities){
+        // 将Flux的每个元素映射为一个doSome()耗时操作
+        return Flux.fromStream(
+                cities.stream().map(i->doSome("elem-"+i))
+        );
+    }
 
+
+    // 火狐不支持
+    @RequestMapping(value = "/sse",produces = "text/event-stream")
+    public Flux<String> sseHandle(){
+        // Flux表示包含0或n个元素的异步序列
+        return Flux.just("beijing","shanghai","guangzhou");
+    }
 
     @GetMapping("/mono")
     public Mono<String> monoHandler(){
